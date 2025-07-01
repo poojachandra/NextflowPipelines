@@ -1,8 +1,3 @@
-// main.nf
-// 06/16/2025
-// Pooja Chandra
-// Ha Lab
-
 nextflow.enable.dsl=2
 
 include { READ_COUNTER } from './modules/read_counter.nf'
@@ -18,15 +13,18 @@ workflow {
             def bamFile = file(row.tumorBam)
             def baiFile = file(row.tumorBai)
             def centromereFile = file(params.centromere)
-            def normalPanelFile = row.normalPanel?.trim() ? file(row.normalPanel) : null
 
+            // Require global normalPanel from config
+            if (!params.normalPanel) {
+                error "Missing 'normalPanel' parameter in config or CLI"
+            }
+            def normalPanelFile = file(params.normalPanel)
             def genomeStyleChrs = (row.genomeStyle == "NCBI") ? params.ncbiChrs : params.ucscChrs
-
             def meta = [
                 sampleName   : row.sampleName,
                 sex          : row.sex,
-                genomeStyle  : row.genomeStyle,
-                genomeBuild  : row.genomeBuild,
+                // genomeStyle  : row.genomeStyle,
+                // genomeBuild  : row.genomeBuild,
                 RDchrs       : genomeStyleChrs,
                 normalPanel  : normalPanelFile,
                 centromere   : centromereFile
@@ -38,7 +36,7 @@ workflow {
     // Run read counter
     readcount_ch = READ_COUNTER(samples_ch)
 
-    // Determine if exons file is defined
+    // Optional exons file from params
     def exonsVal = params.exons ? file(params.exons) : null
 
     // Prepare input for ichorCNA

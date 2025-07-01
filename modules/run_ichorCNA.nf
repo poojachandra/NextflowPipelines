@@ -1,19 +1,18 @@
-// run_ichorCNA.nf
-// 06/16/2025
-// Pooja Chandra
-// Ha Lab
 process RUN_ICHORCNA {
 
     tag { meta.sampleName }
 
     input:
-    tuple val(meta), path(tumorWig), path(normalPanel), path(centromere), val(exons)
+    tuple val(meta), 
+          path(tumorWig), 
+          path(normalPanel), 
+          path(centromere), 
+          val(exons)
+
     output:
     tuple val(meta), path("${meta.sampleName}_ichorCNA_results"), emit: ichor_output
 
     script:
-    // Set optional args only if file exists and is not null
-    def normalPanelArg = normalPanel ? "--normalPanel ${normalPanel}" : ""
     def exonsArg = exons ? "--exons ${exons}" : ""
 
     """
@@ -27,15 +26,15 @@ process RUN_ICHORCNA {
         --mapWig ${params.mapWig} \\
         --repTimeWig ${params.repTimeWig} \\
         --sex ${meta.sex} \\
-        ${normalPanelArg} \\
+        --normalPanel ${normalPanel} \\
         --ploidy "${params.ploidy?.join(',') ?: '2'}" \\
         --normal "${params.normal ?: '0.5,0.6,0.7,0.8,0.9,0.95'}" \\
         --maxCN ${params.maxCN ?: 5} \\
         --includeHOMD ${params.includeHOMD ?: true} \\
         --chrs "${params.chrs}" \\
         --chrTrain "${params.chrTrain}" \\
-        --genomeStyle ${meta.genomeStyle} \\
-        --genomeBuild ${meta.genomeBuild} \\
+        --genomeStyle ${params.genomeStyle} \\
+        --genomeBuild ${params.genomeBuild} \\
         --estimateNormal ${params.estimateNormal ?: true} \\
         --estimatePloidy ${params.estimatePloidy ?: true} \\
         --estimateScPrevalence ${params.estimateClonality ?: true} \\

@@ -1,7 +1,4 @@
-// read_counter.nf
-// 06/16/2025
-// Pooja Chandra
-// Ha Lab
+
 nextflow.enable.dsl=2
 
 process READ_COUNTER {

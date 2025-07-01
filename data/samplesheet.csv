@@ -1,2 +1,4 @@
-sampleName,sex,tumorBam,tumorBai,normalPanel,genomeBuild,genomeStyle
-Sample1,male,samples/Sample1.bam,samplesSample1.bam.bai,/ichorcna/normalPanel/PoN_1000kb_hg38.rds_median.rds,hg38,UCSC
+sampleName,sex,tumorBam,tumorBai
+sample1,male,samples/sample1.bam,samples/sample1.bam.bai
+sample2,male,samples/sample2.bam,samples/sample2.bam.bai
+sample3,male,samples/sample3.bam,samples/sample3.bam.bai
